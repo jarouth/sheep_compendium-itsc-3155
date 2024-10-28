@@ -28,8 +28,24 @@ def test_add_sheep():
     }
     response = client.post("/sheep/", json=new_sheep_data)
     assert response.status_code == 201
+    
     assert response.json() == new_sheep_data
     new_sheep = client.get(f"/sheep/{new_sheep_data['id']}")
     assert new_sheep.status_code == 200
 
-
+def test_delete_sheep():
+    sheep_to_delete = {
+        "id": 11,
+        "name": "F1",
+        "breed": "Merino",
+        "sex": "ewe"
+    }
+    response = client.post("/sheep/", json=sheep_to_delete)
+    assert response.status_code == 201
+    
+    assert response.json() == sheep_to_delete
+    new_sheep = client.delete(f"/sheep/{sheep_to_delete['id']}")
+    assert new_sheep.status_code == 204
+    
+    get_response = client.delete(f"/sheep/{sheep_to_delete['id']}")
+    assert get_response.status_code == 404
